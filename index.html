@@ -163,7 +163,7 @@ const SECTION_WORDS={
   "Овощи и фрукты":["картоф","морков","лук","чеснок","капуст","свекл","огур","помид","томат","перец","кабач","баклаж","яблок","банан","лимон","апельс","зелен","укроп","петруш","салат","гриб","ягод","тыкв","брокк","кинз","шпинат","шампин","хурм","гранат"],
   "Мясо и рыба":["куриц","курин","говяд","свин","фарш","индей","рыб","лосос","треск","минтай","колбас","сосис","ветчин","бекон","филе"],
   "Молочное и яйца":["молок","кефир","творог","сметан","сыр","йогурт","масло слив","сливоч","сливк","яйц","яйко","ряжен","сулугуни","имерули","мацони","хачо","аражани"],
-  "Бакалея":["мука","круп","рис","гречк","овсян","макарон","спагет","сахар","соль","масло раст","подсолн","оливк","чай","кофе","мёд","мед","томатн","паст","фасол","горох","чечев","специ","перец молот","дрожж","разрыхл","какао","варень","кукуруз","хмели","уцхо","аджик","ткемал","орех","изюм","карри"],
+  "Бакалея":["мука","круп","рис","гречк","овсян","макарон","спагет","сахар","соль","масло раст","подсолн","оливк","чай","кофе","мёд","мед","томатн","паст","фасол","горох","чечев","специ","перец молот","дрожж","разрыхл","какао","варень","кукуруз","хмели","уцхо","аджик","ткемал","орех","изюм","карри","соев","уксус","крахмал","горчиц","лавров"],
   "Хлеб":["хлеб","батон","лаваш","булк","багет","шоти","пури"]
 };
 const UNIT_ALIASES={"г":"г","гр":"г","кг":"кг","мл":"мл","л":"л","шт":"шт","уп":"уп","ст.л":"ст.л.","стл":"ст.л.","ст.л.":"ст.л.","ч.л":"ч.л.","чл":"ч.л.","ч.л.":"ч.л.","зубч":"зубч."};
@@ -428,7 +428,7 @@ document.addEventListener("click",async e=>{
   if(b.dataset.act==="logout"){firebase.auth().signOut().then(()=>location.reload());return}
   if(!db)return;
   const a=b.dataset.act;
-  if(a==="seed"){b.disabled=true;b.textContent="Загружаю…";try{const r=await fetch("data/recipes.json");const all=await r.json();const batch=db.batch();for(const id in all)batch.set(db.doc("recipes/"+id),all[id]);await batch.commit();toast("Стартовые рецепты загружены")}catch(e){console.error(e);toast("Не удалось загрузить рецепты")}return}
+  if(a==="seed"){b.disabled=true;b.textContent="Загружаю…";try{const r=await fetch("data/recipes.json",{cache:"no-store"});const all=await r.json();const batch=db.batch();let v=1;for(const id in all){const {v:rv,...rec}=all[id];v=Math.max(v,rv||1);batch.set(db.doc("recipes/"+id),rec)}batch.set(db.doc("family/prefs"),{seedVersion:v},{merge:true});await batch.commit();toast("Стартовые рецепты загружены")}catch(e){console.error(e);toast("Не удалось загрузить рецепты")}return}
   if(a==="fill"){saveWeek(w=>{for(let d=0;d<7;d++)for(const[k]of MEALS){const key=d+"-"+k;if(w.slots[key])continue;const r=pickFor(w,d,k);if(r)w.slots[key]=r.id}});toast("Пустые приёмы пищи заполнены");return}
   if(b.dataset.reroll){const key=b.dataset.reroll,[d,k]=key.split("-");saveWeek(w=>{const cur=w.slots[key];delete w.slots[key];const r=pickFor(w,Number(d),k,cur);if(r)w.slots[key]=r.id;else if(cur)w.slots[key]=cur});return}
   if(a==="ideas"){askIdeas();return}
@@ -476,7 +476,7 @@ document.addEventListener("submit",e=>{
     editing=null;render();write(ref.path,()=>ref.set(data));toast("Рецепт сохранён");return}
   if(f.id==="prefsForm"){const data={people:Math.max(1,parseInt($("#pPeople").value)||4),members:$("#pMembers").value.trim(),
       avoid:$("#pAvoid").value.split(",").map(s=>s.trim()).filter(Boolean),appliances:[...f.querySelectorAll('input[name="appl"]:checked')].map(x=>x.value),budget:Math.max(0,parseFloat($("#pBudget").value)||0)};
-    state.prefs=data;render();write("family/prefs",()=>db.doc("family/prefs").set(data));toast("Предпочтения сохранены");return}
+    state.prefs=data;render();write("family/prefs",()=>db.doc("family/prefs").set(data,{merge:true}));toast("Предпочтения сохранены");return}
 });
 
 // ---------- data ----------
@@ -504,12 +504,28 @@ if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.se
   });
   function startData(){
   authState="in";db=fs;render();
-  let got=0;const mark=()=>{got++;if(got>=3){state.ready=true}renderSoft()};
+  let got=0;const mark=()=>{got++;if(got>=3){state.ready=true;syncNewRecipes()}renderSoft()};
   let a=false,b=false,c=false;
   db.doc("family/prefs").onSnapshot(s=>{if(s.exists)state.prefs={...state.prefs,...s.data()};if(!a){a=true;mark()}else renderSoft()},err);
   db.collection("recipes").onSnapshot(s=>{state.recipes=s.docs.map(d=>({id:d.id,...d.data()}));if(!b){b=true;mark()}else renderSoft()},err);
   db.collection("expenses").onSnapshot(s=>{state.expenses=s.docs.map(d=>({id:d.id,...d.data()}));if(!c){c=true;mark()}else renderSoft()},err);
   subscribeWeek();
+  }
+  // Новые рецепты из data/recipes.json (поле v больше seedVersion) добавляются один раз,
+  // так что удалённые вами старые рецепты не возвращаются.
+  async function syncNewRecipes(){
+    if(!state.recipes.length)return;
+    try{
+      const seen=state.prefs.seedVersion||1;
+      const all=await (await fetch("data/recipes.json",{cache:"no-store"})).json();
+      const have=new Set(state.recipes.map(r=>r.id));
+      const batch=db.batch();let v=seen,n=0;
+      for(const id in all){const {v:rv,...rec}=all[id];if((rv||1)<=seen)continue;v=Math.max(v,rv);if(!have.has(id)){batch.set(db.doc("recipes/"+id),rec);n++}}
+      if(v===seen)return;
+      batch.set(db.doc("family/prefs"),{seedVersion:v},{merge:true});
+      await batch.commit();
+      if(n)toast("Добавлены новые рецепты: "+n);
+    }catch(e){console.error(e)}
   }
 })();
 })();
