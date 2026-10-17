@@ -1,5 +1,5 @@
 // Кэширует оболочку сайта, чтобы он открывался без интернета (например, в магазине).
-const CACHE = "nashe-menu-v1";
+const CACHE = "nashe-menu-v2";
 const SHELL = ["./", "index.html", "firebase-config.js", "manifest.webmanifest", "icons/icon.svg", "icons/icon-192.png", "data/recipes.json"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL))); self.skipWaiting(); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))); self.clients.claim(); });

@@ -418,7 +418,13 @@ document.addEventListener("click",async e=>{
   if(b.dataset.tab){tab=b.dataset.tab;editing=null;pendingRender=false;try{localStorage.setItem("menu-tab",tab)}catch(_){};render();window.scrollTo(0,0);return}
   if(b.id==="prevWeek"||b.id==="nextWeek"){weekStart=addDays(weekStart,b.id==="prevWeek"?-7:7);subscribeWeek();render();return}
   if(b.dataset.go){tab=b.dataset.go;render();return}
-  if(b.dataset.act==="login"){const p=new firebase.auth.GoogleAuthProvider();firebase.auth().signInWithRedirect(p);return}
+  if(b.dataset.act==="login"){const p=new firebase.auth.GoogleAuthProvider();authMsg="";
+    // Popup работает в Safari на iPhone; redirect там теряет вход из-за разных доменов.
+    firebase.auth().signInWithPopup(p).catch(e=>{
+      if(e&&(e.code==="auth/popup-blocked"||e.code==="auth/operation-not-supported-in-this-environment")){firebase.auth().signInWithRedirect(p);return}
+      if(e&&e.code==="auth/popup-closed-by-user"||e&&e.code==="auth/cancelled-popup-request")return;
+      authMsg="Не удалось войти: "+(e.message||e.code)+". Если сайт открыт внутри другого приложения, откройте его в Safari или Chrome.";render()});
+    return}
   if(b.dataset.act==="logout"){firebase.auth().signOut().then(()=>location.reload());return}
   if(!db)return;
   const a=b.dataset.act;
@@ -491,8 +497,12 @@ if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.se
   const fs=firebase.firestore();
   try{fs.enablePersistence({synchronizeTabs:true}).catch(()=>{})}catch(e){}
   try{await firebase.auth().getRedirectResult()}catch(e){authMsg="Не удалось войти: "+(e.message||e.code)}
-  const user=await new Promise(res=>{const un=firebase.auth().onAuthStateChanged(u=>{un();res(u)})});
-  if(!user){authState="out";render();return}
+  let started=false;
+  firebase.auth().onAuthStateChanged(u=>{
+    if(!u){if(!started){authState="out";render()}return}
+    if(started)return;started=true;startData();
+  });
+  function startData(){
   authState="in";db=fs;render();
   let got=0;const mark=()=>{got++;if(got>=3){state.ready=true}renderSoft()};
   let a=false,b=false,c=false;
@@ -500,6 +510,7 @@ if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.se
   db.collection("recipes").onSnapshot(s=>{state.recipes=s.docs.map(d=>({id:d.id,...d.data()}));if(!b){b=true;mark()}else renderSoft()},err);
   db.collection("expenses").onSnapshot(s=>{state.expenses=s.docs.map(d=>({id:d.id,...d.data()}));if(!c){c=true;mark()}else renderSoft()},err);
   subscribeWeek();
+  }
 })();
 })();
 </script>
