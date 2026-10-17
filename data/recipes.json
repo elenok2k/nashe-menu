@@ -1,0 +1,1703 @@
+{
+ "ex-bliny": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Молоко",
+    "qty": 500,
+    "unit": "мл"
+   },
+   {
+    "name": "Яйцо",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Мука",
+    "qty": 250,
+    "unit": "г"
+   },
+   {
+    "name": "Сахар",
+    "qty": 2,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Сметана",
+    "qty": 200,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "breakfast"
+  ],
+  "name": "Блины со сметаной",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "выходные"
+  ]
+ },
+ "ex-borsch-svinina": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Свинина",
+    "qty": 600,
+    "unit": "г"
+   },
+   {
+    "name": "Свекла",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Капуста",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Картофель",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Томатная паста",
+    "qty": 2,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Сметана",
+    "qty": 200,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "lunch"
+  ],
+  "name": "Борщ со свининой",
+  "servings": 8,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-buter": {
+  "equipment": [
+   "oven"
+  ],
+  "ingredients": [
+   {
+    "name": "Хлеб",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Сулугуни",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Помидоры",
+    "qty": 3,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "breakfast"
+  ],
+  "name": "Горячие бутерброды с сыром и помидором",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "быстро"
+  ]
+ },
+ "ex-chechevica": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Чечевица красная",
+    "qty": 300,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Томатная паста",
+    "qty": 2,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Лимон",
+    "qty": 1,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "lunch"
+  ],
+  "name": "Суп из красной чечевицы",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример",
+   "без мяса"
+  ]
+ },
+ "ex-draniki": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Картофель",
+    "qty": 1,
+    "unit": "кг"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Яйцо",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Мука",
+    "qty": 3,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Сметана",
+    "qty": 200,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "dinner",
+   "breakfast"
+  ],
+  "name": "Драники со сметаной",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "без мяса"
+  ]
+ },
+ "ex-frikadelki": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Фарш",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Картофель",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Рис",
+    "qty": 50,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "lunch"
+  ],
+  "name": "Суп с фрикадельками",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-golubcy": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Капуста",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Фарш",
+    "qty": 600,
+    "unit": "г"
+   },
+   {
+    "name": "Рис",
+    "qty": 150,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Сметана",
+    "qty": 200,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "lunch",
+   "dinner"
+  ],
+  "name": "Голубцы",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-gorohovyi": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Горох",
+    "qty": 300,
+    "unit": "г"
+   },
+   {
+    "name": "Свиные рёбрышки",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Картофель",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "lunch"
+  ],
+  "name": "Гороховый суп",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-granola": {
+  "equipment": [],
+  "ingredients": [
+   {
+    "name": "Йогурт",
+    "qty": 800,
+    "unit": "г"
+   },
+   {
+    "name": "Гранола",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Банан",
+    "qty": 3,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "breakfast"
+  ],
+  "name": "Йогурт с гранолой и бананом",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "быстро",
+   "без готовки"
+  ]
+ },
+ "ex-grechka-moloko": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Гречка",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Молоко",
+    "qty": 600,
+    "unit": "мл"
+   },
+   {
+    "name": "Масло сливочное",
+    "qty": 30,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "breakfast"
+  ],
+  "name": "Гречневая каша с молоком",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "быстро"
+  ]
+ },
+ "ex-grechka": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Гречка",
+    "qty": 300,
+    "unit": "г"
+   },
+   {
+    "name": "Фарш",
+    "qty": 600,
+    "unit": "г"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Яйцо",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Хлеб",
+    "qty": null,
+    "unit": ""
+   }
+  ],
+  "meals": [
+   "lunch",
+   "dinner"
+  ],
+  "name": "Гречка с котлетами",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-grib-sup": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Шампиньоны",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Картофель",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Сметана",
+    "qty": 150,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "lunch"
+  ],
+  "name": "Грибной суп с картофелем",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример",
+   "без мяса"
+  ]
+ },
+ "ex-gulyash": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Свинина",
+    "qty": 600,
+    "unit": "г"
+   },
+   {
+    "name": "Лук",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Томатная паста",
+    "qty": 2,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Макароны",
+    "qty": 400,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "lunch",
+   "dinner"
+  ],
+  "name": "Гуляш из свинины с макаронами",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-karri": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Куриная грудка (замороженная)",
+    "qty": 700,
+    "unit": "г"
+   },
+   {
+    "name": "Помидоры",
+    "qty": 5,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Чеснок",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Кинза",
+    "qty": 1,
+    "unit": "уп"
+   },
+   {
+    "name": "Хмели-сунели",
+    "qty": 1,
+    "unit": "ч.л."
+   },
+   {
+    "name": "Рис",
+    "qty": 300,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "dinner"
+  ],
+  "name": "Чахохбили с рисом",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-kurica-kartofel": {
+  "equipment": [
+   "oven"
+  ],
+  "ingredients": [
+   {
+    "name": "Куриная грудка (замороженная)",
+    "qty": 700,
+    "unit": "г"
+   },
+   {
+    "name": "Картофель",
+    "qty": 1,
+    "unit": "кг"
+   },
+   {
+    "name": "Чеснок",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Сметана",
+    "qty": 150,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "dinner",
+   "lunch"
+  ],
+  "name": "Куриная грудка, запечённая с картофелем",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-kurinye-kotlety": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Куриная грудка (замороженная)",
+    "qty": 600,
+    "unit": "г"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Яйцо",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Картофель",
+    "qty": 1,
+    "unit": "кг"
+   },
+   {
+    "name": "Молоко",
+    "qty": 150,
+    "unit": "мл"
+   }
+  ],
+  "meals": [
+   "dinner",
+   "lunch"
+  ],
+  "name": "Куриные котлеты с картофельным пюре",
+  "servings": 4,
+  "steps": "Грудку разморозить и прокрутить в фарш.",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-kurinyi-sup": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Куриная грудка (замороженная)",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Картофель",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Макароны (лапша)",
+    "qty": 150,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "lunch"
+  ],
+  "name": "Куриный суп с лапшой",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-lazanya": {
+  "equipment": [
+   "oven",
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Листы для лазаньи",
+    "qty": 250,
+    "unit": "г"
+   },
+   {
+    "name": "Фарш",
+    "qty": 600,
+    "unit": "г"
+   },
+   {
+    "name": "Томаты в собственном соку",
+    "qty": 800,
+    "unit": "г"
+   },
+   {
+    "name": "Сулугуни",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Молоко",
+    "qty": 500,
+    "unit": "мл"
+   },
+   {
+    "name": "Мука",
+    "qty": 50,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "dinner"
+  ],
+  "name": "Лазанья",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример",
+   "выходные"
+  ]
+ },
+ "ex-lenivye-vareniki": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Творог (хачо)",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Яйцо",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Мука",
+    "qty": 150,
+    "unit": "г"
+   },
+   {
+    "name": "Сметана",
+    "qty": 200,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "dinner",
+   "breakfast"
+  ],
+  "name": "Ленивые вареники",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "быстро"
+  ]
+ },
+ "ex-makarony": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Макароны",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Фарш",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "dinner",
+   "lunch"
+  ],
+  "name": "Макароны по-флотски",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "быстро"
+  ]
+ },
+ "ex-manka": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Манная крупа",
+    "qty": 120,
+    "unit": "г"
+   },
+   {
+    "name": "Молоко",
+    "qty": 800,
+    "unit": "мл"
+   },
+   {
+    "name": "Мёд",
+    "qty": 2,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Грецкие орехи",
+    "qty": 50,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "breakfast"
+  ],
+  "name": "Манная каша с мёдом и орехами",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "быстро"
+  ]
+ },
+ "ex-oladi": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Мацони",
+    "qty": 500,
+    "unit": "мл"
+   },
+   {
+    "name": "Яйцо",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Мука",
+    "qty": 300,
+    "unit": "г"
+   },
+   {
+    "name": "Яблоко",
+    "qty": 2,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "breakfast"
+  ],
+  "name": "Оладьи на мацони с яблоком",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "выходные"
+  ]
+ },
+ "ex-omlet": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Яйцо",
+    "qty": 8,
+    "unit": "шт"
+   },
+   {
+    "name": "Молоко",
+    "qty": 200,
+    "unit": "мл"
+   },
+   {
+    "name": "Сулугуни",
+    "qty": 150,
+    "unit": "г"
+   },
+   {
+    "name": "Хлеб",
+    "qty": null,
+    "unit": ""
+   }
+  ],
+  "meals": [
+   "breakfast",
+   "dinner"
+  ],
+  "name": "Омлет с сулугуни",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "быстро"
+  ]
+ },
+ "ex-ovsyanka": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Овсяные хлопья",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Молоко",
+    "qty": 800,
+    "unit": "мл"
+   },
+   {
+    "name": "Яблоко",
+    "qty": 2,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "breakfast"
+  ],
+  "name": "Овсяная каша с яблоком",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "быстро"
+  ]
+ },
+ "ex-pasta-kurica": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Макароны",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Куриная грудка (замороженная)",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Сметана",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Сулугуни",
+    "qty": 100,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "dinner"
+  ],
+  "name": "Паста с курицей в сметанном соусе",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "быстро"
+  ]
+ },
+ "ex-pelmeni": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Мука",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Фарш",
+    "qty": 700,
+    "unit": "г"
+   },
+   {
+    "name": "Лук",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Яйцо",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Сметана",
+    "qty": 200,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "dinner",
+   "lunch"
+  ],
+  "name": "Домашние пельмени",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример",
+   "выходные"
+  ]
+ },
+ "ex-percy": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Перец болгарский",
+    "qty": 8,
+    "unit": "шт"
+   },
+   {
+    "name": "Куриная грудка (замороженная)",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Рис",
+    "qty": 150,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Томатная паста",
+    "qty": 2,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Сметана",
+    "qty": 150,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "dinner",
+   "lunch"
+  ],
+  "name": "Фаршированные перцы",
+  "servings": 4,
+  "steps": "Грудку разморозить и прокрутить в фарш.",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-plov-govyad": {
+  "equipment": [
+   "oven"
+  ],
+  "ingredients": [
+   {
+    "name": "Фарш",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Капуста",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Рис",
+    "qty": 150,
+    "unit": "г"
+   },
+   {
+    "name": "Сметана",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Томатная паста",
+    "qty": 2,
+    "unit": "ст.л."
+   }
+  ],
+  "meals": [
+   "dinner"
+  ],
+  "name": "Голубцы ленивые в духовке",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-plov": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Рис",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Куриная грудка (замороженная)",
+    "qty": 700,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Чеснок",
+    "qty": 1,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "dinner",
+   "lunch"
+  ],
+  "name": "Плов с курицей",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-psheno-izum": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Пшено",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Молоко",
+    "qty": 800,
+    "unit": "мл"
+   },
+   {
+    "name": "Изюм",
+    "qty": 80,
+    "unit": "г"
+   },
+   {
+    "name": "Масло сливочное",
+    "qty": 30,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "breakfast"
+  ],
+  "name": "Пшённая каша с изюмом",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-psheno": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Кукурузная крупа",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Молоко",
+    "qty": 600,
+    "unit": "мл"
+   },
+   {
+    "name": "Сулугуни",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Масло сливочное",
+    "qty": 30,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "breakfast"
+  ],
+  "name": "Кукурузная каша с сулугуни (гоми)",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-ragu": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Кабачок",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Картофель",
+    "qty": 600,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Перец болгарский",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Помидоры",
+    "qty": 3,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "dinner",
+   "lunch"
+  ],
+  "name": "Овощное рагу",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "без мяса"
+  ]
+ },
+ "ex-rassolnik": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Куриная грудка (замороженная)",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Перловка",
+    "qty": 100,
+    "unit": "г"
+   },
+   {
+    "name": "Огурцы солёные",
+    "qty": 3,
+    "unit": "шт"
+   },
+   {
+    "name": "Картофель",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "lunch"
+  ],
+  "name": "Рассольник",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-shakshuka": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Яйцо",
+    "qty": 8,
+    "unit": "шт"
+   },
+   {
+    "name": "Помидоры",
+    "qty": 5,
+    "unit": "шт"
+   },
+   {
+    "name": "Перец болгарский",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Хлеб",
+    "qty": 1,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "breakfast",
+   "dinner"
+  ],
+  "name": "Шакшука",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "без мяса"
+  ]
+ },
+ "ex-shchi-kurica": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Куриная грудка (замороженная)",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Капуста",
+    "qty": 600,
+    "unit": "г"
+   },
+   {
+    "name": "Картофель",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Сметана",
+    "qty": 200,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "lunch"
+  ],
+  "name": "Щи с курицей",
+  "servings": 8,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-solyanka": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Колбаса копчёная",
+    "qty": 300,
+    "unit": "г"
+   },
+   {
+    "name": "Сосиски",
+    "qty": 300,
+    "unit": "г"
+   },
+   {
+    "name": "Огурцы солёные",
+    "qty": 4,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Томатная паста",
+    "qty": 2,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Лимон",
+    "qty": 1,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "lunch"
+  ],
+  "name": "Солянка",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-svinina-duhovka": {
+  "equipment": [
+   "oven"
+  ],
+  "ingredients": [
+   {
+    "name": "Свинина",
+    "qty": 700,
+    "unit": "г"
+   },
+   {
+    "name": "Картофель",
+    "qty": 1,
+    "unit": "кг"
+   },
+   {
+    "name": "Лук",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Сметана",
+    "qty": 150,
+    "unit": "г"
+   },
+   {
+    "name": "Сулугуни",
+    "qty": 100,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "dinner"
+  ],
+  "name": "Свинина с картофелем в духовке",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "выходные"
+  ]
+ },
+ "ex-syrniki-shpinat": {
+  "equipment": [
+   "stove",
+   "oven"
+  ],
+  "ingredients": [
+   {
+    "name": "Яйцо",
+    "qty": 8,
+    "unit": "шт"
+   },
+   {
+    "name": "Шпинат",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Сулугуни",
+    "qty": 100,
+    "unit": "г"
+   },
+   {
+    "name": "Молоко",
+    "qty": 100,
+    "unit": "мл"
+   }
+  ],
+  "meals": [
+   "breakfast",
+   "dinner"
+  ],
+  "name": "Фриттата со шпинатом",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример",
+   "без мяса",
+   "быстро"
+  ]
+ },
+ "ex-syrniki": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Творог (хачо)",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Яйцо",
+    "qty": 2,
+    "unit": "шт"
+   },
+   {
+    "name": "Мука",
+    "qty": 4,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Сметана",
+    "qty": 200,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "breakfast"
+  ],
+  "name": "Сырники",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-syrnyi-sup": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Куриная грудка (замороженная)",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Картофель",
+    "qty": 400,
+    "unit": "г"
+   },
+   {
+    "name": "Сыр плавленый",
+    "qty": 200,
+    "unit": "г"
+   },
+   {
+    "name": "Морковь",
+    "qty": 1,
+    "unit": "шт"
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "lunch"
+  ],
+  "name": "Сырный суп с курицей",
+  "servings": 6,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-tefteli": {
+  "equipment": [
+   "stove"
+  ],
+  "ingredients": [
+   {
+    "name": "Фарш",
+    "qty": 500,
+    "unit": "г"
+   },
+   {
+    "name": "Рис",
+    "qty": 300,
+    "unit": "г"
+   },
+   {
+    "name": "Томатная паста",
+    "qty": 3,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Лук",
+    "qty": 1,
+    "unit": "шт"
+   }
+  ],
+  "meals": [
+   "lunch",
+   "dinner"
+  ],
+  "name": "Тефтели в томатном соусе с рисом",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ },
+ "ex-zapekanka": {
+  "equipment": [
+   "oven"
+  ],
+  "ingredients": [
+   {
+    "name": "Творог (хачо)",
+    "qty": 600,
+    "unit": "г"
+   },
+   {
+    "name": "Яйцо",
+    "qty": 3,
+    "unit": "шт"
+   },
+   {
+    "name": "Манная крупа",
+    "qty": 4,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Сахар",
+    "qty": 3,
+    "unit": "ст.л."
+   },
+   {
+    "name": "Сметана",
+    "qty": 150,
+    "unit": "г"
+   }
+  ],
+  "meals": [
+   "breakfast",
+   "dinner"
+  ],
+  "name": "Творожная запеканка",
+  "servings": 4,
+  "steps": "",
+  "tags": [
+   "пример"
+  ]
+ }
+}

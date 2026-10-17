@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Наше меню</title>
+<meta name="theme-color" content="#2f6b3a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Наше меню">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+[hidden]{display:none!important}
+img{max-width:100%}
+/* Layout: sticky header with week switcher and tabs; one working column, max 760px; day cards stack */
+:root{
+  --bg:#f5f7f2; --surface:#ffffff; --surface-2:#eef2e9; --line:#dbe2d3;
+  --fg:#1d261b; --muted:#5d6b58; --accent:#2f6b3a; --accent-fg:#ffffff; --accent-soft:#dcebd9;
+  --saffron:#c98a12; --warn:#b4471f; --warn-soft:#f8e3da; --ok:#2f6b3a;
+  --f-display:"Unbounded","Manrope",system-ui,sans-serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-num:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121711; --surface:#1a2119; --surface-2:#212a20; --line:#2f3a2d;
+  --fg:#e6ece2; --muted:#9aa894; --accent:#7fc48a; --accent-fg:#0f1a10; --accent-soft:#24402a;
+  --saffron:#e3ad45; --warn:#f08a62; --warn-soft:#3a2219; --ok:#7fc48a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121711; --surface:#1a2119; --surface-2:#212a20; --line:#2f3a2d;
+  --fg:#e6ece2; --muted:#9aa894; --accent:#7fc48a; --accent-fg:#0f1a10; --accent-soft:#24402a;
+  --saffron:#e3ad45; --warn:#f08a62; --warn-soft:#3a2219; --ok:#7fc48a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:14px 8px;flex-wrap:wrap}
+h1{font-family:var(--f-display);font-weight:700;font-size:20px;margin:0;letter-spacing:-.01em}
+h1 span{color:var(--accent)}
+.week{display:flex;align-items:center;gap:6px}
+.week b{font-weight:600;min-width:9.5em;text-align:center;font-variant-numeric:tabular-nums}
+nav{display:flex;gap:4px;overflow-x:auto;padding-block:4px 10px;scrollbar-width:none}
+nav button{flex:none}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-weight:600}
+button:hover{border-color:var(--accent)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.icon{padding:6px 11px;border-radius:8px}
+button.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+button.ghost{background:transparent}
+button.danger{color:var(--warn)}
+nav button[aria-selected="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+main{padding-block:18px 48px;display:grid;gap:16px}
+h2{font-family:var(--f-display);font-weight:500;font-size:16px;margin:0;text-wrap:balance}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.between{justify-content:space-between}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.days{display:grid;gap:10px}
+.day h3{margin:0 0 8px;font-size:14px;font-weight:700;display:flex;gap:8px;align-items:baseline}
+.day h3 .muted{font-weight:500}
+.day.today{border-color:var(--accent)}
+.slot{display:grid;grid-template-columns:5.6em 1fr;gap:8px;align-items:center;padding-block:3px}
+.slot label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+select,input,textarea{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+textarea{min-height:9em;resize:vertical}
+.warnchip{display:inline-block;font-size:12px;color:var(--warn);background:var(--warn-soft);border-radius:999px;padding:1px 8px;font-weight:600}
+.chip{display:inline-block;font-size:12px;background:var(--accent-soft);border-radius:999px;padding:1px 8px;font-weight:600}
+.chip.ex{background:var(--surface-2);color:var(--muted)}
+.list-group{display:grid;gap:2px}
+.list-group h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:10px 0 4px}
+.item{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px dashed var(--line)}
+.item:last-child{border-bottom:0}
+.item input[type=checkbox]{width:22px;height:22px;accent-color:var(--accent);flex:none}
+.item .name{flex:1;min-width:0}
+.item .qty{font-family:var(--f-num);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.item.done .name,.item.done .qty{text-decoration:line-through;color:var(--muted)}
+.item.home .name{color:var(--muted)}
+.home-btn{font-size:12px;padding:3px 9px}
+.daychip{padding:6px 11px;font-size:13px}
+.daychip[aria-pressed="true"]{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.home-btn[aria-pressed="true"]{background:var(--surface-2);color:var(--muted)}
+.big{font-family:var(--f-num);font-size:28px;font-variant-numeric:tabular-nums}
+.bars{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;align-items:end;height:130px;position:relative;margin-top:8px}
+.bar{background:var(--accent-soft);border-radius:4px 4px 0 0;position:relative;min-height:2px}
+.bar.cur{background:var(--accent)}
+.bar.over{background:var(--saffron)}
+.bar span{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-family:var(--f-num);font-size:10px;color:var(--muted);white-space:nowrap}
+.barlabels{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;font-size:11px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+.budgetline{position:absolute;left:0;right:0;border-top:2px dashed var(--saffron)}
+.exp{display:grid;grid-template-columns:auto 1fr auto auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)}
+.exp:last-child{border-bottom:0}
+.exp .sum{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.form{display:grid;gap:10px}
+.form .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form label{display:grid;gap:4px;font-size:13px;font-weight:600}
+.checks{display:flex;gap:14px;flex-wrap:wrap;font-weight:500}
+.checks label{display:flex;gap:6px;align-items:center;font-weight:500}
+.checks input{width:auto}
+.recipe{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--line)}
+.recipe:last-child{border-bottom:0}
+.recipe>div{min-width:0}
+.recipe b{display:block}
+.empty{text-align:center;padding:28px 12px;color:var(--muted)}
+.notice{background:var(--warn-soft);color:var(--warn);border-radius:var(--r);padding:10px 14px;font-weight:600}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:9px 16px;border-radius:999px;font-weight:600;z-index:20}
+.slot .pick{display:flex;gap:6px}
+.slot .pick select{flex:1}
+.reroll{padding:6px 10px;border-radius:8px;flex:none}
+.ideas{border-style:dashed}
+.idea{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px;display:grid;gap:4px}
+.idea .steps{white-space:pre-line}
+@media (max-width:480px){.form .two{grid-template-columns:1fr}.exp{grid-template-columns:auto 1fr auto}.exp .shop{display:none}}
+@media (prefers-reduced-motion:no-preference){button{transition:border-color .15s}}
+</style>
+
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <h1>Наше <span>меню</span></h1>
+      <div class="week">
+        <button class="icon" id="prevWeek" aria-label="Прошлая неделя">‹</button>
+        <b id="weekLabel">…</b>
+        <button class="icon" id="nextWeek" aria-label="Следующая неделя">›</button>
+      </div>
+    </div>
+    <nav role="tablist" id="tabs">
+      <button role="tab" data-tab="menu">Меню</button>
+      <button role="tab" data-tab="shop">Покупки</button>
+      <button role="tab" data-tab="money">Траты</button>
+      <button role="tab" data-tab="recipes">Рецепты</button>
+      <button role="tab" data-tab="prefs">Предпочтения</button>
+    </nav>
+  </div>
+</header>
+<main class="wrap" id="main">
+  <div class="card empty">Загружаю данные семьи…</div>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+(function(){
+const MEALS=[["breakfast","Завтрак"],["lunch","Обед"],["dinner","Ужин"]];
+const APPLIANCES=[["stove","Плита"],["oven","Духовка"],["microwave","Микроволновка"],["multicooker","Мультиварка"],["airfryer","Аэрогриль"],["blender","Блендер"],["mixer","Миксер"],["steamer","Пароварка"],["grill","Гриль"]];
+const APP_NEED={stove:"плита",oven:"духовка",microwave:"микроволновка",multicooker:"мультиварка",airfryer:"аэрогриль",blender:"блендер",mixer:"миксер",steamer:"пароварка",grill:"гриль"};
+const DAYS=["Понедельник","Вторник","Среда","Четверг","Пятница","Суббота","Воскресенье"];
+const SECTIONS=["Овощи и фрукты","Мясо и рыба","Молочное и яйца","Бакалея","Хлеб","Другое"];
+const SECTION_WORDS={
+  "Овощи и фрукты":["картоф","морков","лук","чеснок","капуст","свекл","огур","помид","томат","перец","кабач","баклаж","яблок","банан","лимон","апельс","зелен","укроп","петруш","салат","гриб","ягод","тыкв","брокк","кинз","шпинат","шампин","хурм","гранат"],
+  "Мясо и рыба":["куриц","курин","говяд","свин","фарш","индей","рыб","лосос","треск","минтай","колбас","сосис","ветчин","бекон","филе"],
+  "Молочное и яйца":["молок","кефир","творог","сметан","сыр","йогурт","масло слив","сливоч","сливк","яйц","яйко","ряжен","сулугуни","имерули","мацони","хачо","аражани"],
+  "Бакалея":["мука","круп","рис","гречк","овсян","макарон","спагет","сахар","соль","масло раст","подсолн","оливк","чай","кофе","мёд","мед","томатн","паст","фасол","горох","чечев","специ","перец молот","дрожж","разрыхл","какао","варень","кукуруз","хмели","уцхо","аджик","ткемал","орех","изюм","карри"],
+  "Хлеб":["хлеб","батон","лаваш","булк","багет","шоти","пури"]
+};
+const UNIT_ALIASES={"г":"г","гр":"г","кг":"кг","мл":"мл","л":"л","шт":"шт","уп":"уп","ст.л":"ст.л.","стл":"ст.л.","ст.л.":"ст.л.","ч.л":"ч.л.","чл":"ч.л.","ч.л.":"ч.л.","зубч":"зубч."};
+
+let db=null, state={prefs:{avoid:[],members:"",budget:0,people:4}, recipes:[], week:null, expenses:[], ready:false};
+let ideaMeal="any", ideaWish="";
+let shopDays=new Set([0,1,2,3,4,5,6]);
+try{const sd=localStorage.getItem("menu-shopdays");if(sd!=null)shopDays=new Set(sd.split("").map(Number).filter(n=>n>=0&&n<7))}catch(e){}
+function daysKey(){return [...shopDays].sort().join("")}
+function saveShopDays(){try{localStorage.setItem("menu-shopdays",daysKey())}catch(e){}}
+function bkey(id){return id+"@"+daysKey()}
+let sampleFn=null, ideas=[], ideasBusy=false, ideasMsg="", ideasCtl=null;
+let tab="menu", weekStart=mondayOf(new Date()), unsubWeek=null, editing=null, showUnsuitable=false;
+try{const t=localStorage.getItem("menu-tab"); if(t) tab=t;}catch(e){}
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function mondayOf(d){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());const wd=(x.getDay()+6)%7;x.setDate(x.getDate()-wd);return x}
+function addDays(d,n){const x=new Date(d);x.setDate(x.getDate()+n);return x}
+function fmtShort(d){return d.toLocaleDateString("ru-RU",{day:"numeric",month:"short"}).replace(".","")}
+function rub(n){const v=Math.round((Number(n)||0)*100)/100;return v.toLocaleString("ru-RU",{maximumFractionDigits:2})+" ₾"}
+function toast(msg){const t=$("#toast");t.textContent=msg;t.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>t.hidden=true,2200)}
+
+// one write at a time per document
+const queues={};
+function write(path,fn){queues[path]=(queues[path]||Promise.resolve()).then(fn).catch(e=>{console.error(e);toast(e&&e.code==="quota_exceeded"?"База заполнена: удалите старые записи":"Не удалось сохранить, попробуйте ещё раз")});return queues[path]}
+
+// ---------- preferences ----------
+function avoidList(){return (state.prefs.avoid||[]).map(s=>s.trim().toLowerCase()).filter(Boolean)}
+function conflicts(recipe){const av=avoidList();const hits=new Set();
+  for(const ing of recipe.ingredients||[]){const n=(ing.name||"").toLowerCase();for(const a of av){if(n.includes(a))hits.add(a)}}
+  for(const t of recipe.tags||[]){const n=t.toLowerCase();for(const a of av){if(n===a)hits.add(a)}}
+  const have=state.prefs.appliances;
+  if(Array.isArray(have)){for(const e of recipe.equipment||[]){if(!have.includes(e))hits.add("нужна "+(APP_NEED[e]||e))}}
+  return[...hits]}
+
+// ---------- ingredients ----------
+function parseIngredients(text){
+  return text.split("\n").map(l=>l.trim()).filter(Boolean).map(line=>{
+    const m=line.match(/^(.*?)[\s—–:-]+(\d+(?:[.,]\d+)?)\s*([а-яё.]*)\s*$/i);
+    if(m){const u=normUnit(m[3]);return{name:m[1].trim(),qty:parseFloat(m[2].replace(",",".")),unit:u}}
+    return{name:line,qty:null,unit:""}})}
+function normUnit(u){u=(u||"").toLowerCase().replace(/\s/g,"");if(!u)return"шт";const k=u.replace(/\.$/,"");return UNIT_ALIASES[k]||UNIT_ALIASES[u]||u}
+function ingToText(list){return(list||[]).map(i=>i.qty!=null?`${i.name} ${String(i.qty).replace(".",",")} ${i.unit||""}`.trim():i.name).join("\n")}
+function sectionOf(name){const n=name.toLowerCase();for(const s of SECTIONS){const w=SECTION_WORDS[s];if(w&&w.some(x=>n.includes(x)))return s}return"Другое"}
+function baseUnit(qty,unit){if(unit==="кг")return[qty*1000,"г"];if(unit==="л")return[qty*1000,"мл"];return[qty,unit]}
+function fmtQty(q,u){if(q==null)return"";if(u==="г"&&q>=1000)return trim(q/1000)+" кг";if(u==="мл"&&q>=1000)return trim(q/1000)+" л";return trim(q)+" "+u}
+function trim(n){const r=Math.round(n*10)/10;return String(r).replace(".",",")}
+
+// ---------- week ----------
+function weekId(){return ymd(weekStart)}
+function emptyWeek(){return{slots:{},bought:{},home:{},extra:[]}}
+function shoppingList(){
+  const w=state.week||emptyWeek(), people=Number(state.prefs.people)||4, map=new Map();
+  for(const key in w.slots){if(!shopDays.has(Number(key.split("-")[0])))continue;const r=state.recipes.find(x=>x.id===w.slots[key]);if(!r)continue;
+    const k=people/(Number(r.servings)||people);
+    for(const ing of r.ingredients||[]){
+      const name=ing.name.trim(); if(!name)continue;
+      let qty=ing.qty, unit=ing.unit||"";
+      if(qty!=null){[qty,unit]=baseUnit(qty*k,unit)}
+      const id=(name.toLowerCase()+"|"+unit).replace(/[^a-zа-яё0-9|.]/gi,"_");
+      const cur=map.get(id)||{id,name,unit,qty:qty==null?null:0,dishes:new Set(),section:sectionOf(name)};
+      if(qty!=null)cur.qty=(cur.qty||0)+qty; cur.dishes.add(r.name); map.set(id,cur)}}
+  for(const e of w.extra||[]){const id="extra_"+e.id;map.set(id,{id,name:e.name,unit:"",qty:null,dishes:new Set(["добавлено вручную"]),section:sectionOf(e.name),extra:e.id})}
+  return[...map.values()]}
+
+function usedIds(w,d){const out=[];for(const[k]of MEALS){const v=w.slots[d+"-"+k];if(v)out.push(v)}return out}
+function pickFor(w,d,k,exclude){
+  const pool=state.recipes.filter(r=>(!(r.meals&&r.meals.length)||r.meals.includes(k))&&!conflicts(r).length&&r.id!==exclude);
+  if(!pool.length)return null;
+  const count={};for(const key in w.slots){const v=w.slots[key];if(v)count[v]=(count[v]||0)+1}
+  const near=new Set([...(d>0?usedIds(w,d-1):[]),...(d<6?usedIds(w,d+1):[])]), same=new Set(usedIds(w,d));
+  let best=null,bs=Infinity;
+  for(const r of pool){const sc=(count[r.id]||0)*3+(near.has(r.id)?4:0)+(same.has(r.id)?6:0)+Math.random()*2;if(sc<bs){bs=sc;best=r}}
+  return best}
+
+// ---------- render ----------
+function render(){
+  $("#weekLabel").textContent=fmtShort(weekStart)+" – "+fmtShort(addDays(weekStart,6));
+  document.querySelectorAll("#tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===tab)));
+  const m=$("#main");
+  if(!window.FIREBASE_CONFIG){m.innerHTML=`<div class="notice">Сайт ещё не подключён к базе данных. Заполните файл firebase-config.js по инструкции в README.</div>`;return}
+  if(authState==="out"){m.innerHTML=`<div class="card empty"><h2>Вход для семьи</h2><p>Войдите через Google, чтобы видеть общее меню, покупки и траты.</p><button class="primary" data-act="login">Войти через Google</button>${authMsg?`<p class="muted small">${esc(authMsg)}</p>`:""}</div>`;return}
+  if(!db){m.innerHTML=`<div class="card empty">Подключаюсь…</div>`;return}
+  if(!state.ready){m.innerHTML=`<div class="card empty">Загружаю данные семьи…</div>`;return}
+  const active=document.activeElement&&document.activeElement.id;
+  m.innerHTML=({menu:renderMenu,shop:renderShop,money:renderMoney,recipes:renderRecipes,prefs:renderPrefs}[tab]||renderMenu)();
+  if(active){const el=document.getElementById(active);if(el&&el.tagName!=="BUTTON")el.focus()}
+}
+
+function recipeOptions(meal,selected){
+  const list=state.recipes.filter(r=>!(r.meals&&r.meals.length)||r.meals.includes(meal)).sort((a,b)=>a.name.localeCompare(b.name,"ru"));
+  let html=`<option value="">—</option>`;
+  for(const r of list){const c=conflicts(r);if(c.length&&!showUnsuitable&&r.id!==selected)continue;
+    html+=`<option value="${esc(r.id)}"${r.id===selected?" selected":""}>${esc(r.name)}${c.length?" (не подходит)":""}</option>`}
+  return html}
+
+function renderMenu(){
+  if(!state.recipes.length) return `<div class="card empty"><h2>Сначала добавьте рецепты</h2><p>Меню собирается из ваших рецептов. Загрузите стартовый набор или добавьте свои блюда.</p><div class="row" style="justify-content:center"><button class="primary" data-act="seed">Загрузить стартовые рецепты</button><button data-go="recipes">Перейти к рецептам</button></div></div>`;
+  const w=state.week||emptyWeek(), today=ymd(new Date());
+  let filled=Object.values(w.slots).filter(Boolean).length;
+  let html=`<div class="row between"><div><h2>Меню на неделю</h2><div class="muted small">Заполнено ${filled} из 21 · на ${esc(state.prefs.people||4)} чел.</div></div>
+  <div class="row"><button data-act="fill">Заполнить пустые</button><button data-act="copy">Как на прошлой неделе</button></div></div>
+  <p class="muted small" style="margin:0">↻ рядом с блюдом подбирает другое, стараясь не повторять его в соседние дни.</p>
+  <label class="row small muted" style="gap:6px"><input type="checkbox" id="showUns" style="width:auto"${showUnsuitable?" checked":""}> Показывать блюда, которые не подходят по предпочтениям</label>
+  <div class="days">`;
+  for(let d=0;d<7;d++){const date=addDays(weekStart,d);
+    html+=`<div class="card day${ymd(date)===today?" today":""}"><h3>${DAYS[d]} <span class="muted">${fmtShort(date)}</span></h3>`;
+    for(const[k,label]of MEALS){const key=d+"-"+k, sel=w.slots[key]||"", r=state.recipes.find(x=>x.id===sel), c=r?conflicts(r):[];
+      html+=`<div class="slot"><label for="s_${key}">${label}</label><div><div class="pick"><select id="s_${key}" data-slot="${key}">${recipeOptions(k,sel)}</select><button class="reroll ghost" data-reroll="${key}" aria-label="Другое блюдо" title="Другое блюдо">↻</button></div>${c.length?`<div class="warnchip" style="margin-top:4px">не подходит: ${esc(c.join(", "))}</div>`:""}</div></div>`}
+    html+=`</div>`}
+  return html+`</div>`}
+
+function renderShop(){
+  const w=state.week||emptyWeek(), items=shoppingList();
+  const left=items.filter(i=>!w.bought[bkey(i.id)]&&!w.home[i.id]).length;
+  const all=shopDays.size===7;
+  const short=["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
+  let html=`<div class="card"><div class="small" style="font-weight:600;margin-bottom:8px">На какие дни покупаем</div>
+  <div class="row" style="gap:6px"><button class="daychip" data-alldays="1" aria-pressed="${all}">Вся неделя</button>${short.map((d,i)=>`<button class="daychip" data-shopday="${i}" aria-pressed="${shopDays.has(i)}">${d} ${addDays(weekStart,i).getDate()}</button>`).join("")}</div>
+  <div class="row" style="gap:6px;margin-top:8px"><button class="ghost small" data-daysfrom="today">С сегодня на 3 дня</button><button class="ghost small" data-daysfrom="clear">Снять выбор</button></div></div>`;
+  html+=`<div class="row between"><div><h2>Список покупок</h2><div class="muted small">${items.length?`${all?"На всю неделю":"На "+[...shopDays].sort().map(i=>short[i]).join(", ")} · осталось купить: ${left} из ${items.length}`:"Список пуст"}</div></div>
+  ${items.length?`<button class="ghost small" data-act="resetBought">Снять отметки</button>`:""}</div>`;
+  html+=`<form class="row" id="extraForm" style="flex-wrap:nowrap"><input id="extraName" placeholder="Добавить вручную, например «Салфетки»" autocomplete="off"><button class="primary" type="submit">Добавить</button></form>`;
+  if(!items.length) return html+`<div class="card empty">${shopDays.size?"На выбранные дни в меню нет блюд. Выберите другие дни или заполните меню.":"Выберите хотя бы один день."}</div>`;
+  html+=`<div class="card">`;
+  for(const s of SECTIONS){const group=items.filter(i=>i.section===s).sort((a,b)=>a.name.localeCompare(b.name,"ru"));if(!group.length)continue;
+    html+=`<div class="list-group"><h3>${s}</h3>`;
+    for(const i of group){const done=!!w.bought[bkey(i.id)], home=!!w.home[i.id];
+      html+=`<div class="item${done?" done":""}${home?" home":""}"><input type="checkbox" id="b_${esc(i.id)}" data-buy="${esc(i.id)}"${done?" checked":""}${home?" disabled":""} aria-label="Куплено: ${esc(i.name)}">
+      <label class="name" for="b_${esc(i.id)}">${esc(i.name)}<div class="muted small">${esc([...i.dishes].join(", "))}</div></label>
+      <span class="qty">${home?"есть дома":esc(fmtQty(i.qty,i.unit))}</span>
+      ${i.extra?`<button class="home-btn ghost" data-delextra="${esc(i.extra)}" aria-label="Удалить">×</button>`:`<button class="home-btn" data-home="${esc(i.id)}" aria-pressed="${home}">${home?"Нужно":"Дома"}</button>`}</div>`}
+    html+=`</div>`}
+  return html+`</div><p class="muted small">Отметки «куплено» сохраняются отдельно для каждого набора дней. «Дома» убирает продукт из покупок, если он уже есть. Количества пересчитаны на ${esc(state.prefs.people||4)} чел.</p>`}
+
+function weekTotals(){const t={};for(const e of state.expenses){const k=ymd(mondayOf(new Date(e.date+"T12:00")));t[k]=(t[k]||0)+Number(e.amount||0)}return t}
+function renderMoney(){
+  const totals=weekTotals(), cur=totals[weekId()]||0, budget=Number(state.prefs.budget)||0;
+  const weekExp=state.expenses.filter(e=>ymd(mondayOf(new Date(e.date+"T12:00")))===weekId()).sort((a,b)=>b.date.localeCompare(a.date));
+  const weeks=[];for(let i=7;i>=0;i--){const d=addDays(weekStart,-7*i);weeks.push({d,v:totals[ymd(d)]||0})}
+  const max=Math.max(budget,...weeks.map(w=>w.v),1);
+  const defDate=(()=>{const t=new Date();const end=addDays(weekStart,6);return(t>=weekStart&&t<=addDays(end,1))?ymd(t):ymd(weekStart)})();
+  let html=`<div class="card"><div class="row between"><div><div class="muted small">Потрачено за неделю</div><div class="big">${rub(cur)}</div></div>
+  ${budget?`<div style="text-align:right"><div class="muted small">Бюджет ${rub(budget)}</div><div class="${cur>budget?"warnchip":"chip"}">${cur>budget?"превышен на "+rub(cur-budget):"осталось "+rub(budget-cur)}</div></div>`:`<button class="ghost small" data-go="prefs">Задать бюджет</button>`}</div>
+  <div class="bars">${budget?`<div class="budgetline" style="bottom:${budget/max*100}%"></div>`:""}${weeks.map((w,i)=>`<div class="bar${i===7?" cur":""}${budget&&w.v>budget?" over":""}" style="height:${w.v/max*100}%">${w.v?`<span>${Math.round(w.v)}</span>`:""}</div>`).join("")}</div>
+  <div class="barlabels">${weeks.map(w=>`<div>${w.d.getDate()}.${String(w.d.getMonth()+1).padStart(2,"0")}</div>`).join("")}</div>
+  <div class="muted small" style="margin-top:6px">Последние 8 недель, по понедельникам${budget?" · пунктир = бюджет":""}</div></div>`;
+  html+=`<form class="card form" id="expForm"><h2>Добавить чек</h2><div class="two">
+  <label>Сумма, ₾<input id="expAmount" type="number" inputmode="decimal" min="0" step="0.01" required placeholder="85,40"></label>
+  <label>Дата<input id="expDate" type="date" value="${defDate}" required></label></div>
+  <div class="two"><label>Магазин<input id="expShop" placeholder="Nikora" autocomplete="off"></label>
+  <label>Заметка<input id="expNote" placeholder="продукты на неделю" autocomplete="off"></label></div>
+  <div><button class="primary" type="submit">Сохранить чек</button></div></form>`;
+  html+=`<div class="card"><h2>Чеки за неделю</h2>${weekExp.length?weekExp.map(e=>`<div class="exp"><span class="muted small">${fmtShort(new Date(e.date+"T12:00"))}</span><span>${esc(e.note||e.shop||"Покупка")}${e.note&&e.shop?` <span class="muted small">· ${esc(e.shop)}</span>`:""}</span><span class="sum">${rub(e.amount)}</span><button class="home-btn ghost" data-delexp="${esc(e.id)}" aria-label="Удалить чек">×</button></div>`).join(""):`<p class="muted">На этой неделе чеков пока нет. Внесите сумму после похода в магазин.</p>`}</div>`;
+  return html}
+
+function renderRecipes(){
+  const list=[...state.recipes].sort((a,b)=>a.name.localeCompare(b.name,"ru"));
+  let html="";
+  if(editing){const r=editing==="new"?{name:"",meals:[],servings:4,ingredients:[],tags:[]}:state.recipes.find(x=>x.id===editing)||{};
+    html+=`<form class="card form" id="recipeForm"><h2>${editing==="new"?"Новый рецепт":"Изменить рецепт"}</h2>
+    <label>Название<input id="rName" required value="${esc(r.name)}" placeholder="Сырники"></label>
+    <div><div class="small" style="font-weight:600;margin-bottom:4px">Подходит на</div><div class="checks">${MEALS.map(([k,l])=>`<label><input type="checkbox" name="meal" value="${k}"${(r.meals||[]).includes(k)?" checked":""}> ${l}</label>`).join("")}</div></div>
+    <div><div class="small" style="font-weight:600;margin-bottom:4px">Нужна техника</div><div class="checks">${APPLIANCES.map(([k,l])=>`<label><input type="checkbox" name="equip" value="${k}"${(r.equipment||[]).includes(k)?" checked":""}> ${l}</label>`).join("")}</div></div>
+    <div class="two"><label>Порций в рецепте<input id="rServ" type="number" min="1" value="${esc(r.servings||4)}"></label>
+    <label>Метки через запятую<input id="rTags" value="${esc((r.tags||[]).join(", "))}" placeholder="быстро, без мяса"></label></div>
+    <label>Ингредиенты, по одному в строке<textarea id="rIng" placeholder="Творог 400 г&#10;Яйцо 1 шт&#10;Мука 3 ст.л.&#10;Соль">${esc(ingToText(r.ingredients))}</textarea></label>
+    <div class="muted small">Пишите «название количество единица»: г, кг, мл, л, шт, ст.л., ч.л. Без количества продукт просто попадёт в список.</div>
+    <label>Как готовить (по желанию)<textarea id="rSteps" style="min-height:5em">${esc(r.steps||"")}</textarea></label>
+    <div class="row"><button class="primary" type="submit">Сохранить</button><button type="button" data-act="cancelEdit">Отмена</button>${editing!=="new"?`<button type="button" class="danger ghost" data-delrecipe="${esc(r.id)}">Удалить</button>`:""}</div></form>`}
+  html+=`<div class="row between"><div><h2>Рецепты</h2><div class="muted small">${list.length} блюд</div></div>${editing?"":`<button class="primary" data-act="newRecipe">Добавить рецепт</button>`}</div>`;
+  html+=renderIdeas();
+  if(!list.length) return html+`<div class="card empty">Здесь будут любимые блюда семьи. Добавьте первое или загрузите стартовый набор из 42 рецептов.<div style="margin-top:10px"><button class="primary" data-act="seed">Загрузить стартовые рецепты</button></div></div>`;
+  html+=`<div class="card">`+list.map(r=>{const c=conflicts(r);return`<div class="recipe"><div><b>${esc(r.name)}</b>
+    <div class="row small" style="gap:4px;margin-top:3px">${(r.meals||[]).map(m=>`<span class="chip">${MEALS.find(x=>x[0]===m)?.[1]||m}</span>`).join("")}${(r.tags||[]).map(t=>`<span class="chip ex">${esc(t)}</span>`).join("")}${(r.equipment||[]).map(e=>`<span class="chip ex">${esc(APP_NEED[e]||e)}</span>`).join("")}${c.length?`<span class="warnchip">не подходит: ${esc(c.join(", "))}</span>`:""}</div>
+    <div class="muted small" style="margin-top:3px">${esc((r.ingredients||[]).map(i=>i.name).join(", "))}</div></div>
+    <button class="ghost" data-edit="${esc(r.id)}">Изменить</button></div>`}).join("")+`</div>`;
+  return html}
+
+function renderIdeas(){
+  if(!sampleFn) return "";
+  const mealName=k=>MEALS.find(x=>x[0]===k)?.[1]||k;
+  let h=`<div class="card ideas"><h2>Новые идеи</h2><p class="muted small" style="margin:4px 0 10px">Claude предложит блюда, которых ещё нет в ваших рецептах, с учётом предпочтений семьи.</p>
+  <form class="form" id="ideaForm"><div class="two"><label>Приём пищи<select id="ideaMeal"><option value="any">Любой</option>${MEALS.map(([k,l])=>`<option value="${k}"${ideaMeal===k?" selected":""}>${l}</option>`).join("")}</select></label>
+  <label>Пожелание<input id="ideaWish" value="${esc(ideaWish)}" placeholder="из курицы, за 30 минут" autocomplete="off"></label></div>
+  <div class="row">${ideasBusy?`<button type="button" class="primary" disabled>Придумываю…</button><button type="button" data-act="stopIdeas">Стоп</button>`:`<button type="submit" class="primary">Предложить 3 блюда</button>`}</div></form>`;
+  if(ideasMsg)h+=`<p class="muted small">${esc(ideasMsg)}</p>`;
+  ideas.forEach((r,i)=>{h+=`<div class="idea"><div class="row between"><b>${esc(r.name)}</b><button class="primary" data-addidea="${i}">Добавить в рецепты</button></div>
+    <div class="row small" style="gap:4px">${(r.meals||[]).map(m=>`<span class="chip">${esc(mealName(m))}</span>`).join("")}<span class="chip ex">${esc(r.servings)} порц.</span>${(r.equipment||[]).map(e=>`<span class="chip ex">${esc(APP_NEED[e]||e)}</span>`).join("")}</div>
+    <div class="small">${esc((r.ingredients||[]).map(x=>x.qty!=null?`${x.name} ${String(x.qty).replace(".",",")} ${x.unit}`:x.name).join(", "))}</div>
+    ${r.steps?`<div class="muted small steps">${esc(r.steps)}</div>`:""}</div>`});
+  return h+`</div>`}
+
+async function askIdeas(){
+  if(!sampleFn||ideasBusy)return;
+  const meal=$("#ideaMeal").value, wish=$("#ideaWish").value.trim(), p=state.prefs; ideaMeal=meal; ideaWish=wish;
+  ideasBusy=true;ideasMsg="";ideas=[];render();
+  const mealTxt=meal==="any"?"любой приём пищи (завтрак, обед или ужин)":MEALS.find(x=>x[0]===meal)[1].toLowerCase();
+  const prompt=`Ты помогаешь семье, которая живёт в Тбилиси (Грузия), разнообразить домашнее меню. Предложи 3 разных блюда на ${mealTxt}.
+Едоков: ${p.people||4}.
+${p.avoid&&p.avoid.length?"Нельзя использовать продукты: "+p.avoid.join(", ")+".":""}
+${p.members?"Особенности членов семьи:\n"+p.members:""}
+${Array.isArray(p.appliances)?"Из кухонной техники есть только: "+(p.appliances.map(k=>APP_NEED[k]).join(", ")||"ничего, блюда без готовки")+". Не предлагай блюда, которым нужна другая техника.":""}
+${wish?"Пожелание: "+wish:""}
+Не повторяй блюда, которые уже есть у семьи: ${state.recipes.map(r=>r.name).join("; ")}.
+Используй продукты, которые легко купить в обычном супермаркете или на рынке в Тбилиси, готовка до 1 часа. Мясо в Грузии дорогое: если нужна курица, бери только замороженную куриную грудку (голеней и бёдер в магазинах почти нет), мяса клади немного, чаще предлагай блюда из яиц, бобовых (фасоль, чечевица), сыра и овощей. Крупы и плавленый сыр купить легко. Хорошо подходят местные продукты: мацони, сулугуни, имерули, творог (хачо), кинза, хмели-сунели, ткемали.
+Ответь только JSON-массивом из 3 объектов вида:
+{"name":"Название","meals":["breakfast"|"lunch"|"dinner"],"servings":4,"equipment":["stove"|"oven"|"microwave"|"multicooker"|"airfryer"|"blender"|"mixer"|"steamer"|"grill"],"ingredients":[{"name":"Курица","qty":500,"unit":"г"}],"steps":"Коротко, 2-4 предложения."}
+Единицы только: г, мл, шт, ст.л., ч.л. Для соли и специй qty null и unit "".`;
+  ideasCtl=new AbortController();
+  try{
+    const res=await sampleFn.json(prompt,{signal:ideasCtl.signal,cache:false});
+    const arr=Array.isArray(res)?res:[];
+    ideas=arr.filter(r=>r&&typeof r.name==="string").slice(0,3).map(r=>({
+      name:String(r.name).slice(0,120),
+      meals:(Array.isArray(r.meals)?r.meals:[]).filter(m=>MEALS.some(x=>x[0]===m)),
+      servings:Math.max(1,parseInt(r.servings)||Number(p.people)||4),
+      equipment:(Array.isArray(r.equipment)?r.equipment:[]).filter(e=>APP_NEED[e]),
+      tags:[],steps:typeof r.steps==="string"?r.steps.slice(0,1500):"",
+      ingredients:(Array.isArray(r.ingredients)?r.ingredients:[]).filter(x=>x&&x.name).slice(0,25).map(x=>{const q=x.qty==null||x.qty===""?null:Number(x.qty);return{name:String(x.name).slice(0,80),qty:Number.isFinite(q)?q:null,unit:Number.isFinite(q)?normUnit(String(x.unit||"")):""}})
+    }));
+    if(!ideas.length)ideasMsg="Не получилось разобрать ответ. Попробуйте ещё раз.";
+  }catch(e){
+    const c=e&&e.code;
+    if(c==="cancelled")ideasMsg="";
+    else if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(c)){sampleFn=null}
+    else if(c==="rate_limited")ideasMsg="Слишком много запросов. Попробуйте чуть позже.";
+    else if(c==="invalid_json")ideasMsg="Ответ пришёл в неожиданном виде. Попробуйте ещё раз.";
+    else ideasMsg="Не удалось получить идеи. Попробуйте ещё раз.";
+  }finally{ideasBusy=false;ideasCtl=null;render()}
+}
+
+function renderPrefs(){const p=state.prefs;
+  return `<form class="card form" id="prefsForm"><h2>Предпочтения семьи</h2>
+  <label>Сколько человек едят<input id="pPeople" type="number" min="1" value="${esc(p.people||4)}"></label>
+  <label>Кто в семье и что любит<textarea id="pMembers" style="min-height:5em" placeholder="Мама: без сахара&#10;Сын: не ест лук">${esc(p.members||"")}</textarea></label>
+  <label>Не используем в блюдах (через запятую)<input id="pAvoid" value="${esc((p.avoid||[]).join(", "))}" placeholder="свинина, грибы, арахис"></label>
+  <div class="muted small">Блюда с этими продуктами помечаются «не подходит» и не предлагаются в меню. Достаточно части слова: «гриб» найдёт и «грибы», и «шампиньоны грибные».</div>
+  <div><div class="small" style="font-weight:600;margin-bottom:4px">Кухонная техника, которая есть дома</div><div class="checks">${APPLIANCES.map(([k,l])=>`<label><input type="checkbox" name="appl" value="${k}"${!Array.isArray(p.appliances)||p.appliances.includes(k)?" checked":""}> ${l}</label>`).join("")}</div>
+  <div class="muted small" style="margin-top:4px">Блюда, которым нужна техника без галочки, помечаются «не подходит» и не попадают в меню.</div></div>
+  <label>Бюджет на продукты в неделю, ₾<input id="pBudget" type="number" min="0" step="10" value="${esc(p.budget||"")}" placeholder="300"></label>
+  <div><button class="primary" type="submit">Сохранить</button></div></form>
+  <div class="row between card"><span class="muted small">Вы вошли как ${esc((firebase.auth().currentUser||{}).email||"")}</span><button class="ghost small" type="button" data-act="logout">Выйти</button></div>`}
+
+// ---------- actions ----------
+function saveWeek(mut){const w=JSON.parse(JSON.stringify(state.week||emptyWeek()));mut(w);state.week=w;render();const path="weeks/"+weekId();return write(path,()=>db.doc(path).set(w))}
+
+document.addEventListener("click",async e=>{
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.tab){tab=b.dataset.tab;editing=null;pendingRender=false;try{localStorage.setItem("menu-tab",tab)}catch(_){};render();window.scrollTo(0,0);return}
+  if(b.id==="prevWeek"||b.id==="nextWeek"){weekStart=addDays(weekStart,b.id==="prevWeek"?-7:7);subscribeWeek();render();return}
+  if(b.dataset.go){tab=b.dataset.go;render();return}
+  if(b.dataset.act==="login"){const p=new firebase.auth.GoogleAuthProvider();firebase.auth().signInWithRedirect(p);return}
+  if(b.dataset.act==="logout"){firebase.auth().signOut().then(()=>location.reload());return}
+  if(!db)return;
+  const a=b.dataset.act;
+  if(a==="seed"){b.disabled=true;b.textContent="Загружаю…";try{const r=await fetch("data/recipes.json");const all=await r.json();const batch=db.batch();for(const id in all)batch.set(db.doc("recipes/"+id),all[id]);await batch.commit();toast("Стартовые рецепты загружены")}catch(e){console.error(e);toast("Не удалось загрузить рецепты")}return}
+  if(a==="fill"){saveWeek(w=>{for(let d=0;d<7;d++)for(const[k]of MEALS){const key=d+"-"+k;if(w.slots[key])continue;const r=pickFor(w,d,k);if(r)w.slots[key]=r.id}});toast("Пустые приёмы пищи заполнены");return}
+  if(b.dataset.reroll){const key=b.dataset.reroll,[d,k]=key.split("-");saveWeek(w=>{const cur=w.slots[key];delete w.slots[key];const r=pickFor(w,Number(d),k,cur);if(r)w.slots[key]=r.id;else if(cur)w.slots[key]=cur});return}
+  if(a==="ideas"){askIdeas();return}
+  if(a==="stopIdeas"){ideasCtl&&ideasCtl.abort();return}
+  if(b.dataset.addidea){const i=Number(b.dataset.addidea),idea=ideas[i];if(!idea)return;const ref=db.collection("recipes").doc();const data={...idea,tags:[...(idea.tags||[]),"идея Claude"]};
+    state.recipes.push({id:ref.id,...data});ideas=ideas.filter((_,j)=>j!==i);render();write(ref.path,()=>ref.set(data));toast("«"+idea.name+"» добавлено в рецепты");return}
+  if(a==="copy"){const prev=await db.doc("weeks/"+ymd(addDays(weekStart,-7))).get();if(!prev.exists||!Object.keys(prev.data().slots||{}).length){toast("На прошлой неделе меню пустое");return}
+    saveWeek(w=>{w.slots={...prev.data().slots}});toast("Скопировано меню прошлой недели");return}
+  if(a==="resetBought"){const suf="@"+daysKey();saveWeek(w=>{for(const k in w.bought){if(k.endsWith(suf))delete w.bought[k]}});return}
+  if(b.dataset.shopday){const d=Number(b.dataset.shopday);if(shopDays.has(d))shopDays.delete(d);else shopDays.add(d);saveShopDays();render();return}
+  if(b.dataset.alldays){shopDays=new Set([0,1,2,3,4,5,6]);saveShopDays();render();return}
+  if(b.dataset.daysfrom==="clear"){shopDays=new Set();saveShopDays();render();return}
+  if(b.dataset.daysfrom==="today"){const t=mondayOf(new Date()).getTime()===weekStart.getTime()?(new Date().getDay()+6)%7:0;shopDays=new Set([t,t+1,t+2].filter(x=>x<7));saveShopDays();render();return}
+  if(b.dataset.home){const id=b.dataset.home;saveWeek(w=>{w.home=w.home||{};if(w.home[id])delete w.home[id];else w.home[id]=true});return}
+  if(b.dataset.delextra){const id=b.dataset.delextra;saveWeek(w=>{w.extra=(w.extra||[]).filter(x=>x.id!==id)});return}
+  if(b.dataset.delexp){const id=b.dataset.delexp;state.expenses=state.expenses.filter(x=>x.id!==id);render();write("expenses/"+id,()=>db.doc("expenses/"+id).delete());toast("Чек удалён");return}
+  if(a==="newRecipe"){editing="new";render();window.scrollTo(0,0);return}
+  if(a==="cancelEdit"){editing=null;render();return}
+  if(b.dataset.edit){editing=b.dataset.edit;render();window.scrollTo(0,0);return}
+  if(b.dataset.delrecipe){const id=b.dataset.delrecipe;
+    if(b.dataset.confirm!=="1"){b.dataset.confirm="1";b.textContent="Точно удалить?";return}
+    editing=null;state.recipes=state.recipes.filter(r=>r.id!==id);render();write("recipes/"+id,()=>db.doc("recipes/"+id).delete());toast("Рецепт удалён");return}
+});
+
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.id==="showUns"){showUnsuitable=t.checked;render();return}
+  if(!db)return;
+  if(t.dataset.slot){const key=t.dataset.slot,v=t.value;saveWeek(w=>{if(v)w.slots[key]=v;else delete w.slots[key]});return}
+  if(t.dataset.buy){const id=bkey(t.dataset.buy),on=t.checked;saveWeek(w=>{w.bought=w.bought||{};if(on)w.bought[id]=true;else delete w.bought[id]});return}
+});
+
+document.addEventListener("submit",e=>{
+  e.preventDefault();if(!db)return;const f=e.target;
+  if(f.id==="ideaForm"){askIdeas();return}
+  if(f.id==="extraForm"){const name=$("#extraName").value.trim();if(!name)return;saveWeek(w=>{w.extra=w.extra||[];w.extra.push({id:Date.now().toString(36),name})});return}
+  if(f.id==="expForm"){const amount=parseFloat(String($("#expAmount").value).replace(",","."));if(!(amount>0)){toast("Введите сумму чека");return}
+    const data={amount,date:$("#expDate").value,shop:$("#expShop").value.trim(),note:$("#expNote").value.trim(),createdAt:Date.now()};
+    const ref=db.collection("expenses").doc();state.expenses=[...state.expenses,{id:ref.id,...data}];render();write(ref.path,()=>ref.set(data));toast("Чек сохранён");return}
+  if(f.id==="recipeForm"){const name=$("#rName").value.trim();if(!name)return;
+    const data={name,meals:[...f.querySelectorAll('input[name="meal"]:checked')].map(x=>x.value),servings:Math.max(1,parseInt($("#rServ").value)||4),
+      tags:$("#rTags").value.split(",").map(s=>s.trim()).filter(Boolean),equipment:[...f.querySelectorAll('input[name="equip"]:checked')].map(x=>x.value),ingredients:parseIngredients($("#rIng").value),steps:$("#rSteps").value.trim()};
+    const ref=editing==="new"?db.collection("recipes").doc():db.doc("recipes/"+editing);
+    const i=state.recipes.findIndex(r=>r.id===ref.id);if(i>=0)state.recipes[i]={id:ref.id,...data};else state.recipes.push({id:ref.id,...data});
+    editing=null;render();write(ref.path,()=>ref.set(data));toast("Рецепт сохранён");return}
+  if(f.id==="prefsForm"){const data={people:Math.max(1,parseInt($("#pPeople").value)||4),members:$("#pMembers").value.trim(),
+      avoid:$("#pAvoid").value.split(",").map(s=>s.trim()).filter(Boolean),appliances:[...f.querySelectorAll('input[name="appl"]:checked')].map(x=>x.value),budget:Math.max(0,parseFloat($("#pBudget").value)||0)};
+    state.prefs=data;render();write("family/prefs",()=>db.doc("family/prefs").set(data));toast("Предпочтения сохранены");return}
+});
+
+// ---------- data ----------
+function subscribeWeek(){if(!db)return;if(unsubWeek)unsubWeek();const id=weekId();state.week=null;
+  unsubWeek=db.doc("weeks/"+id).onSnapshot(s=>{if(id!==weekId())return;const d=s.exists?s.data():null;state.week=d?{...emptyWeek(),...JSON.parse(JSON.stringify(d))}:emptyWeek();renderSoft()},err)}
+let pendingRender=false;
+function renderSoft(){if(document.querySelector("#main form[data-dirty]")){pendingRender=true;return}render()}
+document.addEventListener("input",e=>{const f=e.target.closest&&e.target.closest("form");if(f&&f.id!=="extraForm"||f&&e.target.value)f.dataset.dirty="1"});
+document.addEventListener("focusout",()=>setTimeout(()=>{if(pendingRender&&!document.querySelector("#main form[data-dirty]")){pendingRender=false;render()}},0));
+function err(e){console.error(e);if(e&&e.code==="permission-denied"){authMsg="У этого аккаунта нет доступа. Попросите добавить ваш адрес в список семьи.";authState="out";db=null;render()}}
+let authState="wait", authMsg="";
+
+render();
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
+(async()=>{
+  if(!window.FIREBASE_CONFIG||!window.firebase){render();return}
+  firebase.initializeApp(window.FIREBASE_CONFIG);
+  const fs=firebase.firestore();
+  try{fs.enablePersistence({synchronizeTabs:true}).catch(()=>{})}catch(e){}
+  try{await firebase.auth().getRedirectResult()}catch(e){authMsg="Не удалось войти: "+(e.message||e.code)}
+  const user=await new Promise(res=>{const un=firebase.auth().onAuthStateChanged(u=>{un();res(u)})});
+  if(!user){authState="out";render();return}
+  authState="in";db=fs;render();
+  let got=0;const mark=()=>{got++;if(got>=3){state.ready=true}renderSoft()};
+  let a=false,b=false,c=false;
+  db.doc("family/prefs").onSnapshot(s=>{if(s.exists)state.prefs={...state.prefs,...s.data()};if(!a){a=true;mark()}else renderSoft()},err);
+  db.collection("recipes").onSnapshot(s=>{state.recipes=s.docs.map(d=>({id:d.id,...d.data()}));if(!b){b=true;mark()}else renderSoft()},err);
+  db.collection("expenses").onSnapshot(s=>{state.expenses=s.docs.map(d=>({id:d.id,...d.data()}));if(!c){c=true;mark()}else renderSoft()},err);
+  subscribeWeek();
+})();
+})();
+</script>
+</body>
+</html>
