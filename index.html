@@ -160,21 +160,31 @@ const APP_NEED={stove:"плита",oven:"духовка",microwave:"микров
 const DAYS=["Понедельник","Вторник","Среда","Четверг","Пятница","Суббота","Воскресенье"];
 const SECTIONS=["Овощи и фрукты","Мясо и рыба","Молочное и яйца","Бакалея","Хлеб","Другое"];
 const SECTION_WORDS={
-  "Овощи и фрукты":["картоф","морков","лук","чеснок","капуст","свекл","огур","помид","томат","перец","кабач","баклаж","яблок","банан","лимон","апельс","зелен","укроп","петруш","салат","гриб","ягод","тыкв","брокк","кинз","шпинат","шампин","хурм","гранат"],
+  "Овощи и фрукты":["картоф","овощ","морков","лук","чеснок","капуст","свекл","огур","помид","томат","перец","кабач","баклаж","яблок","банан","лимон","апельс","зелен","укроп","петруш","салат","гриб","ягод","тыкв","брокк","кинз","шпинат","шампин","хурм","гранат"],
   "Мясо и рыба":["куриц","курин","говяд","свин","фарш","индей","рыб","лосос","треск","минтай","колбас","сосис","ветчин","бекон","филе"],
   "Молочное и яйца":["молок","кефир","творог","сметан","сыр","йогурт","масло слив","сливоч","сливк","яйц","яйко","ряжен","сулугуни","имерули","мацони","хачо","аражани"],
-  "Бакалея":["мука","круп","рис","гречк","овсян","макарон","спагет","сахар","соль","масло раст","подсолн","оливк","чай","кофе","мёд","мед","томатн","паст","фасол","горох","чечев","специ","перец молот","дрожж","разрыхл","какао","варень","кукуруз","хмели","уцхо","аджик","ткемал","орех","изюм","карри","соев","уксус","крахмал","горчиц","лавров"],
+  "Бакалея":["мука","круп","булгур","кускус","киноа","рис","гречк","овсян","макарон","спагет","сахар","соль","масло раст","подсолн","оливк","чай","кофе","мёд","мед","томатн","паст","фасол","горох","чечев","специ","перец молот","дрожж","разрыхл","какао","варень","кукуруз","хмели","уцхо","аджик","ткемал","орех","изюм","карри","соев","уксус","крахмал","горчиц","лавров"],
   "Хлеб":["хлеб","батон","лаваш","булк","багет","шоти","пури"]
 };
 const UNIT_ALIASES={"г":"г","гр":"г","кг":"кг","мл":"мл","л":"л","шт":"шт","уп":"уп","ст.л":"ст.л.","стл":"ст.л.","ст.л.":"ст.л.","ч.л":"ч.л.","чл":"ч.л.","ч.л.":"ч.л.","зубч":"зубч."};
 
 let db=null, state={prefs:{avoid:[],members:"",budget:0,people:4}, recipes:[], week:null, expenses:[], ready:false};
 let ideaMeal="any", ideaWish="";
-let shopDays=new Set([0,1,2,3,4,5,6]);
-try{const sd=localStorage.getItem("menu-shopdays");if(sd!=null)shopDays=new Set(sd.split("").map(Number).filter(n=>n>=0&&n<7))}catch(e){}
-function daysKey(){return [...shopDays].sort().join("")}
-function saveShopDays(){try{localStorage.setItem("menu-shopdays",daysKey())}catch(e){}}
+// Дни покупок: вся показанная неделя или конкретные даты, которые могут переходить на следующую неделю.
+let shopDates=null;
+try{const sd=localStorage.getItem("menu-shopdates");if(sd)shopDates=new Set(sd.split(",").filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)))}catch(e){}
+function saveShopDates(){try{localStorage.setItem("menu-shopdates",shopDates?[...shopDates].sort().join(","):"")}catch(e){}}
+function selectedDates(){return shopDates?[...shopDates].sort():[0,1,2,3,4,5,6].map(i=>ymd(addDays(weekStart,i)))}
+// Отметки «куплено», «дома» и ручные продукты хранятся в неделе первого выбранного дня.
+function shopWeekId(){const d=selectedDates();return d.length?ymd(mondayOf(new Date(d[0]+"T12:00"))):weekId()}
+function daysKey(){return shopDates?[...shopDates].sort().map(d=>d.slice(5)).join(","):"0123456"}
 function bkey(id){return id+"@"+daysKey()}
+const weekCache={}, weekSubs={};
+function getWeek(id){return id===weekId()?state.week:weekCache[id]}
+function ensureShopWeeks(){if(!db)return;const need=new Set(selectedDates().map(d=>ymd(mondayOf(new Date(d+"T12:00")))));
+  for(const id in weekSubs){if(!need.has(id)){weekSubs[id]();delete weekSubs[id];delete weekCache[id]}}
+  for(const id of need){if(id===weekId()||weekSubs[id])continue;
+    weekSubs[id]=db.doc("weeks/"+id).onSnapshot(sn=>{const d=sn.exists?sn.data():null;weekCache[id]=d?{...emptyWeek(),...JSON.parse(JSON.stringify(d))}:emptyWeek();renderSoft()},err)}}
 let sampleFn=null, ideas=[], ideasBusy=false, ideasMsg="", ideasCtl=null;
 let tab="menu", weekStart=mondayOf(new Date()), unsubWeek=null, editing=null, showUnsuitable=false;
 try{const t=localStorage.getItem("menu-tab"); if(t) tab=t;}catch(e){}
@@ -218,8 +228,12 @@ function trim(n){const r=Math.round(n*10)/10;return String(r).replace(".",",")}
 function weekId(){return ymd(weekStart)}
 function emptyWeek(){return{slots:{},bought:{},home:{},extra:[]}}
 function shoppingList(){
-  const w=state.week||emptyWeek(), people=Number(state.prefs.people)||4, map=new Map();
-  for(const key in w.slots){if(!shopDays.has(Number(key.split("-")[0])))continue;const r=state.recipes.find(x=>x.id===w.slots[key]);if(!r)continue;
+  const people=Number(state.prefs.people)||4, map=new Map();
+  const sw=getWeek(shopWeekId())||emptyWeek(), picked=[];
+  for(const ds of selectedDates()){const day=new Date(ds+"T12:00"),wk=getWeek(ymd(mondayOf(day)));if(!wk)continue;const di=(day.getDay()+6)%7;
+    for(const[k]of MEALS){const v=wk.slots[di+"-"+k];if(v)picked.push(v)}}
+  const w=sw;
+  for(const rid of picked){const r=state.recipes.find(x=>x.id===rid);if(!r)continue;
     const k=people/(Number(r.servings)||people);
     for(const ing of r.ingredients||[]){
       const name=ing.name.trim(); if(!name)continue;
@@ -279,17 +293,21 @@ function renderMenu(){
   return html+`</div>`}
 
 function renderShop(){
-  const w=state.week||emptyWeek(), items=shoppingList();
+  ensureShopWeeks();
+  const w=getWeek(shopWeekId())||emptyWeek(), items=shoppingList();
   const left=items.filter(i=>!w.bought[bkey(i.id)]&&!w.home[i.id]).length;
-  const all=shopDays.size===7;
+  const all=!shopDates, sel=new Set(selectedDates());
   const short=["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
+  const dayName=ds=>{const d=new Date(ds+"T12:00");return short[(d.getDay()+6)%7]+" "+d.getDate()};
+  const outside=[...sel].filter(ds=>ymd(mondayOf(new Date(ds+"T12:00")))!==weekId());
   let html=`<div class="card"><div class="small" style="font-weight:600;margin-bottom:8px">На какие дни покупаем</div>
-  <div class="row" style="gap:6px"><button class="daychip" data-alldays="1" aria-pressed="${all}">Вся неделя</button>${short.map((d,i)=>`<button class="daychip" data-shopday="${i}" aria-pressed="${shopDays.has(i)}">${d} ${addDays(weekStart,i).getDate()}</button>`).join("")}</div>
-  <div class="row" style="gap:6px;margin-top:8px"><button class="ghost small" data-daysfrom="today">С сегодня на 3 дня</button><button class="ghost small" data-daysfrom="clear">Снять выбор</button></div></div>`;
-  html+=`<div class="row between"><div><h2>Список покупок</h2><div class="muted small">${items.length?`${all?"На всю неделю":"На "+[...shopDays].sort().map(i=>short[i]).join(", ")} · осталось купить: ${left} из ${items.length}`:"Список пуст"}</div></div>
+  <div class="row" style="gap:6px"><button class="daychip" data-alldays="1" aria-pressed="${all}">Вся неделя</button>${short.map((d,i)=>{const ds=ymd(addDays(weekStart,i));return`<button class="daychip" data-shopdate="${ds}" aria-pressed="${sel.has(ds)}">${d} ${addDays(weekStart,i).getDate()}</button>`}).join("")}</div>
+  <div class="row" style="gap:6px;margin-top:8px"><button class="ghost small" data-daysfrom="tomorrow">Завтра</button><button class="ghost small" data-daysfrom="today">С сегодня на 3 дня</button><button class="ghost small" data-daysfrom="next3">С завтра на 3 дня</button><button class="ghost small" data-daysfrom="clear">Снять выбор</button></div>
+  ${outside.length?`<div class="muted small" style="margin-top:8px">Также выбраны дни другой недели: ${outside.map(dayName).join(", ")}</div>`:""}</div>`;
+  html+=`<div class="row between"><div><h2>Список покупок</h2><div class="muted small">${items.length?`${all?"На всю неделю":"На "+[...sel].sort().map(dayName).join(", ")} · осталось купить: ${left} из ${items.length}`:"Список пуст"}</div></div>
   ${items.length?`<button class="ghost small" data-act="resetBought">Снять отметки</button>`:""}</div>`;
   html+=`<form class="row" id="extraForm" style="flex-wrap:nowrap"><input id="extraName" placeholder="Добавить вручную, например «Салфетки»" autocomplete="off"><button class="primary" type="submit">Добавить</button></form>`;
-  if(!items.length) return html+`<div class="card empty">${shopDays.size?"На выбранные дни в меню нет блюд. Выберите другие дни или заполните меню.":"Выберите хотя бы один день."}</div>`;
+  if(!items.length) return html+`<div class="card empty">${sel.size?"На выбранные дни в меню нет блюд. Выберите другие дни или заполните меню.":"Выберите хотя бы один день."}</div>`;
   html+=`<div class="card">`;
   for(const s of SECTIONS){const group=items.filter(i=>i.section===s).sort((a,b)=>a.name.localeCompare(b.name,"ru"));if(!group.length)continue;
     html+=`<div class="list-group"><h3>${s}</h3>`;
@@ -411,6 +429,8 @@ function renderPrefs(){const p=state.prefs;
   <div class="row between card"><span class="muted small">Вы вошли как ${esc((firebase.auth().currentUser||{}).email||"")}</span><button class="ghost small" type="button" data-act="logout">Выйти</button></div>`}
 
 // ---------- actions ----------
+function saveShopWeek(mut){const id=shopWeekId();if(id===weekId())return saveWeek(mut);
+  const w=JSON.parse(JSON.stringify(weekCache[id]||emptyWeek()));mut(w);weekCache[id]=w;render();const path="weeks/"+id;return write(path,()=>db.doc(path).set(w))}
 function saveWeek(mut){const w=JSON.parse(JSON.stringify(state.week||emptyWeek()));mut(w);state.week=w;render();const path="weeks/"+weekId();return write(path,()=>db.doc(path).set(w))}
 
 document.addEventListener("click",async e=>{
@@ -437,13 +457,14 @@ document.addEventListener("click",async e=>{
     state.recipes.push({id:ref.id,...data});ideas=ideas.filter((_,j)=>j!==i);render();write(ref.path,()=>ref.set(data));toast("«"+idea.name+"» добавлено в рецепты");return}
   if(a==="copy"){const prev=await db.doc("weeks/"+ymd(addDays(weekStart,-7))).get();if(!prev.exists||!Object.keys(prev.data().slots||{}).length){toast("На прошлой неделе меню пустое");return}
     saveWeek(w=>{w.slots={...prev.data().slots}});toast("Скопировано меню прошлой недели");return}
-  if(a==="resetBought"){const suf="@"+daysKey();saveWeek(w=>{for(const k in w.bought){if(k.endsWith(suf))delete w.bought[k]}});return}
-  if(b.dataset.shopday){const d=Number(b.dataset.shopday);if(shopDays.has(d))shopDays.delete(d);else shopDays.add(d);saveShopDays();render();return}
-  if(b.dataset.alldays){shopDays=new Set([0,1,2,3,4,5,6]);saveShopDays();render();return}
-  if(b.dataset.daysfrom==="clear"){shopDays=new Set();saveShopDays();render();return}
-  if(b.dataset.daysfrom==="today"){const t=mondayOf(new Date()).getTime()===weekStart.getTime()?(new Date().getDay()+6)%7:0;shopDays=new Set([t,t+1,t+2].filter(x=>x<7));saveShopDays();render();return}
-  if(b.dataset.home){const id=b.dataset.home;saveWeek(w=>{w.home=w.home||{};if(w.home[id])delete w.home[id];else w.home[id]=true});return}
-  if(b.dataset.delextra){const id=b.dataset.delextra;saveWeek(w=>{w.extra=(w.extra||[]).filter(x=>x.id!==id)});return}
+  if(a==="resetBought"){const suf="@"+daysKey();saveShopWeek(w=>{for(const k in w.bought){if(k.endsWith(suf))delete w.bought[k]}});return}
+  if(b.dataset.shopdate){const ds=b.dataset.shopdate;if(!shopDates)shopDates=new Set(selectedDates());if(shopDates.has(ds))shopDates.delete(ds);else shopDates.add(ds);saveShopDates();render();return}
+  if(b.dataset.alldays){shopDates=null;saveShopDates();render();return}
+  if(b.dataset.daysfrom==="clear"){shopDates=new Set();saveShopDates();render();return}
+  if(b.dataset.daysfrom==="today"||b.dataset.daysfrom==="tomorrow"||b.dataset.daysfrom==="next3"){const f=b.dataset.daysfrom,start=f==="today"?0:1,n=f==="tomorrow"?1:3,t=new Date();
+    shopDates=new Set(Array.from({length:n},(_,i)=>ymd(addDays(t,start+i))));saveShopDates();render();return}
+  if(b.dataset.home){const id=b.dataset.home;saveShopWeek(w=>{w.home=w.home||{};if(w.home[id])delete w.home[id];else w.home[id]=true});return}
+  if(b.dataset.delextra){const id=b.dataset.delextra;saveShopWeek(w=>{w.extra=(w.extra||[]).filter(x=>x.id!==id)});return}
   if(b.dataset.delexp){const id=b.dataset.delexp;state.expenses=state.expenses.filter(x=>x.id!==id);render();write("expenses/"+id,()=>db.doc("expenses/"+id).delete());toast("Чек удалён");return}
   if(a==="newRecipe"){editing="new";render();window.scrollTo(0,0);return}
   if(a==="cancelEdit"){editing=null;render();return}
@@ -458,13 +479,13 @@ document.addEventListener("change",e=>{
   if(t.id==="showUns"){showUnsuitable=t.checked;render();return}
   if(!db)return;
   if(t.dataset.slot){const key=t.dataset.slot,v=t.value;saveWeek(w=>{if(v)w.slots[key]=v;else delete w.slots[key]});return}
-  if(t.dataset.buy){const id=bkey(t.dataset.buy),on=t.checked;saveWeek(w=>{w.bought=w.bought||{};if(on)w.bought[id]=true;else delete w.bought[id]});return}
+  if(t.dataset.buy){const id=bkey(t.dataset.buy),on=t.checked;saveShopWeek(w=>{w.bought=w.bought||{};if(on)w.bought[id]=true;else delete w.bought[id]});return}
 });
 
 document.addEventListener("submit",e=>{
   e.preventDefault();if(!db)return;const f=e.target;
   if(f.id==="ideaForm"){askIdeas();return}
-  if(f.id==="extraForm"){const name=$("#extraName").value.trim();if(!name)return;saveWeek(w=>{w.extra=w.extra||[];w.extra.push({id:Date.now().toString(36),name})});return}
+  if(f.id==="extraForm"){const name=$("#extraName").value.trim();if(!name)return;saveShopWeek(w=>{w.extra=w.extra||[];w.extra.push({id:Date.now().toString(36),name})});return}
   if(f.id==="expForm"){const amount=parseFloat(String($("#expAmount").value).replace(",","."));if(!(amount>0)){toast("Введите сумму чека");return}
     const data={amount,date:$("#expDate").value,shop:$("#expShop").value.trim(),note:$("#expNote").value.trim(),createdAt:Date.now()};
     const ref=db.collection("expenses").doc();state.expenses=[...state.expenses,{id:ref.id,...data}];render();write(ref.path,()=>ref.set(data));toast("Чек сохранён");return}
