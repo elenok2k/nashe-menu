@@ -365,6 +365,13 @@ function renderMoney(){
   html+=`<div class="card"><h2>Чеки ${word}</h2>${list.length?list.map(e=>`<div class="exp"><span class="muted small">${fmtShort(new Date(e.date+"T12:00"))}</span><span>${esc(e.note||e.shop||"Покупка")}${e.note&&e.shop?` <span class="muted small">· ${esc(e.shop)}</span>`:""}</span><span class="sum">${rub(e.amount)}</span><button class="home-btn ghost" data-delexp="${esc(e.id)}" aria-label="Удалить чек">×</button></div>`).join(""):`<p class="muted">${{day:"В этот день",week:"На этой неделе",month:"В этом месяце"}[mode]} чеков нет.</p>`}</div>`;
   return html}
 
+// Фильтр рецептов по приёму пищи: all, breakfast, lunch, dinner.
+let recipeMeal="all";
+try{const rm=localStorage.getItem("menu-recipemeal");if(rm)recipeMeal=rm}catch(e){}
+function recipeCard(r){const c=conflicts(r);return`<div class="recipe"><div><b>${esc(r.name)}</b>
+    <div class="row small" style="gap:4px;margin-top:3px">${(r.meals||[]).map(m=>`<span class="chip">${MEALS.find(x=>x[0]===m)?.[1]||m}</span>`).join("")}${(r.tags||[]).map(t=>`<span class="chip ex">${esc(t)}</span>`).join("")}${(r.equipment||[]).map(e=>`<span class="chip ex">${esc(APP_NEED[e]||e)}</span>`).join("")}${c.length?`<span class="warnchip">не подходит: ${esc(c.join(", "))}</span>`:""}</div>
+    <div class="muted small" style="margin-top:3px">${esc((r.ingredients||[]).map(i=>i.name).join(", "))}</div></div>
+    <button class="ghost" data-edit="${esc(r.id)}">Изменить</button></div>`}
 function renderRecipes(){
   const list=[...state.recipes].sort((a,b)=>a.name.localeCompare(b.name,"ru"));
   let html="";
@@ -382,10 +389,12 @@ function renderRecipes(){
   html+=`<div class="row between"><div><h2>Рецепты</h2><div class="muted small">${list.length} блюд</div></div>${editing?"":`<button class="primary" data-act="newRecipe">Добавить рецепт</button>`}</div>`;
   html+=renderIdeas();
   if(!list.length) return html+`<div class="card empty">Здесь будут любимые блюда семьи. Добавьте первое или загрузите стартовый набор из 42 рецептов.<div style="margin-top:10px"><button class="primary" data-act="seed">Загрузить стартовые рецепты</button></div></div>`;
-  html+=`<div class="card">`+list.map(r=>{const c=conflicts(r);return`<div class="recipe"><div><b>${esc(r.name)}</b>
-    <div class="row small" style="gap:4px;margin-top:3px">${(r.meals||[]).map(m=>`<span class="chip">${MEALS.find(x=>x[0]===m)?.[1]||m}</span>`).join("")}${(r.tags||[]).map(t=>`<span class="chip ex">${esc(t)}</span>`).join("")}${(r.equipment||[]).map(e=>`<span class="chip ex">${esc(APP_NEED[e]||e)}</span>`).join("")}${c.length?`<span class="warnchip">не подходит: ${esc(c.join(", "))}</span>`:""}</div>
-    <div class="muted small" style="margin-top:3px">${esc((r.ingredients||[]).map(i=>i.name).join(", "))}</div></div>
-    <button class="ghost" data-edit="${esc(r.id)}">Изменить</button></div>`}).join("")+`</div>`;
+  const groups=[...MEALS,["none","Без категории"]].map(([k,l])=>({k,l,items:list.filter(r=>k==="none"?!(r.meals&&r.meals.length):(r.meals||[]).includes(k))}));
+  html+=`<div class="row" style="gap:6px">${[["all","Все"],...MEALS].map(([k,l])=>`<button class="daychip" data-recipemeal="${k}" aria-pressed="${recipeMeal===k}">${l}${k==="all"?"":` · ${groups.find(g=>g.k===k).items.length}`}</button>`).join("")}</div>`;
+  for(const g of groups){if(recipeMeal!=="all"&&g.k!==recipeMeal)continue;if(!g.items.length)continue;
+    html+=`<div class="card"><h2>${g.l} <span class="muted small">${g.items.length}</span></h2>${g.items.map(recipeCard).join("")}</div>`}
+  if(recipeMeal!=="all"&&!groups.find(g=>g.k===recipeMeal)?.items.length)html+=`<div class="card empty">В этой категории пока нет блюд.</div>`;
+  if(recipeMeal==="all")html+=`<p class="muted small">Блюда, которые подходят и на обед, и на ужин, показаны в обоих разделах.</p>`;
   return html}
 
 function renderIdeas(){
@@ -490,6 +499,7 @@ document.addEventListener("click",async e=>{
     shopDates=new Set(Array.from({length:n},(_,i)=>ymd(addDays(t,start+i))));saveShopDates();render();return}
   if(b.dataset.home){const id=b.dataset.home;saveShopWeek(w=>{w.home=w.home||{};if(w.home[id])delete w.home[id];else w.home[id]=true});return}
   if(b.dataset.delextra){const id=b.dataset.delextra;saveShopWeek(w=>{w.extra=(w.extra||[]).filter(x=>x.id!==id)});return}
+  if(b.dataset.recipemeal){recipeMeal=b.dataset.recipemeal;try{localStorage.setItem("menu-recipemeal",recipeMeal)}catch(e){}render();return}
   if(b.dataset.moneymode){moneyMode=b.dataset.moneymode;try{localStorage.setItem("menu-moneymode",moneyMode)}catch(e){}render();return}
   if(b.dataset.moneyshift){moneyShift(Number(b.dataset.moneyshift));render();return}
   if(b.dataset.delexp){const id=b.dataset.delexp;state.expenses=state.expenses.filter(x=>x.id!==id);render();write("expenses/"+id,()=>db.doc("expenses/"+id).delete());toast("Чек удалён");return}
